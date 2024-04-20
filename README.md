@@ -1,21 +1,39 @@
-This is a Next.js project created for the Google AI Hackathon.
+# InfluencerGPT v0
+🚀 Introducing InfluencerGPT, the AI sidekick for social media mavens! This innovative app is primed to revolutionize the content creation workflow. Created for the Google AI Hackathon.
 
-## Getting Started
+## Features
+Here's what you get:
 
-First, run the development server:
+- 📝 **Automatic Post Generation**: Type in your core message and watch as the app transforms it into captivating social media content.
 
-```bash
-npm run dev
+- 🔄 **Multi-Platform Post Customization**: Get varied Twitter/X post versions from the initial post, optimized for each platform.
 
+- 🌍 **One-Click Posting**: Effortlessly send your polished posts to LinkedIn or Twitter with a single click.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 🔍 **Local LLM API Integration**: Connect with a powerful WizardLM-2-7B language model for personalized text generation.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- 🎉 **User-Friendly Interface**: Enjoy a responsive web app experience with a sleek, modern design by tailwindCSS.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Screenshots
 
-## Deploy on Vercel
+### The home screen
+<img src="res/influGPT-1.png" width="400" height="400">
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Processing screen
+<img src="res/influGPT-2.png" width="400" height="400">
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Generated post for Linkedin
+<img src="res/influGPT-3.png" width="400" height="400">
+
+### Easy and quick share to Linkedin
+<img src="res/influGPT-4.png" width="400" height="400">
+
+### Generated posts for Twitter
+<img src="res/influGPT-5.png" width="400" height="400">
+
+### Easy and quick share to Twitter
+<img src="res/influGPT-6.png" width="400" height="400">
+
+## Tech behind
+
+This app is connecting locally to a LLM using the text-gen-webui API.
