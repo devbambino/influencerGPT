@@ -1,16 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { JSX, SVGProps, useState } from "react";
 import { Message, useChat } from "ai/react";
 import Image from 'next/image';
 
 export default function Chat() {
   const { messages } = useChat();
   const [isLoading, setIsLoading] = useState(false);
-
+  const [type, setType] = useState("");
   const [state, setState] = useState({
-    article: ""
+    article: "",
+    type: ""
   });
+
+  const types = [
+    { value: "image", name: "From image" },
+    { value: "clipboard", name: "From text" },
+    { value: "link", name: "From link" },
+  ];
+
+  const handleChange = ({
+    target: { name, value },
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    setState({
+      ...state,
+      [name]: value,
+    });
+  };
 
   const handleInput = ({
     target: { name, value },
@@ -28,6 +44,104 @@ export default function Chat() {
           <div className="animate-pulse flex flex-col justify-center items-center ">
             <div className="rounded-full bg-slate-700 h-10 w-10"></div>
             <div>The magic is happening...bear with us...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function ClipboardPasteIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+    return (
+      <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M15 2H9a1 1 0 0 0-1 1v2c0 .6.4 1 1 1h6c.6 0 1-.4 1-1V3c0-.6-.4-1-1-1Z" />
+        <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2M16 4h2a2 2 0 0 1 2 2v2M11 14h10" />
+        <path d="m17 10 4 4-4 4" />
+      </svg>
+    )
+  }
+
+
+  function ImageIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+    return (
+      <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+        <circle cx="9" cy="9" r="2" />
+        <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+      </svg>
+    )
+  }
+
+
+  function LinkIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
+    return (
+      <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+      </svg>
+    )
+  }
+
+  if (!type) {
+    return (
+      <div className="flex flex-col h-screen w-full">
+        <div className="flex-1 flex items-center justify-center p-4 text-center">
+          <div className="grid gap-4 text-sm leading-loose md:text-base">
+            <p>The Super APP is the one app you need for all your daily tasks.</p>
+            <div className="mx-auto w-[400px] ">
+              <div className="grid grid-cols-3 gap-4">
+                {types.map(({ value, name }) => (
+                  <div className="flex space-y-4 items-center justify-center flex-col cursor-pointer border-gray-850 rounded-lg"
+                  >
+
+                    <div className="flex-col mt-2 text-sm text-center font-semibold border border-gray-200 dark:border-gray-800 rounded-lg p-2"
+                      onClick={async () => {
+                        setType(value);
+                      }}
+                    >
+                      {value == "image" && <ImageIcon className="h-6 w-6" />}
+                      {value == "clipboard" && <ClipboardPasteIcon className="h-6 w-6" />}
+                      {value == "link" && <LinkIcon className="h-6 w-6" />}
+                      {name}
+                    </div>
+
+                  </div>
+                ))}
+
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -125,6 +239,7 @@ export default function Chat() {
             </form>
           </div>
         </div>
+        <div className="w-full h-screen bg-green-300"></div>
 
         {messages.length > 0 && !isLoading && (
           <div className="flex flex-col gap-2">
