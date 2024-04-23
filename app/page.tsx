@@ -123,23 +123,16 @@ export default function Chat() {
             <div className="mx-auto w-[400px] ">
               <div className="grid grid-cols-3 gap-4">
                 {types.map(({ value, name }) => (
-                  <div className="flex space-y-4 items-center justify-center flex-col cursor-pointer border-gray-850 rounded-lg"
-                  >
-
-                    <div className="flex-col mt-2 text-sm text-center font-semibold border border-gray-200 dark:border-gray-800 rounded-lg p-2"
-                      onClick={async () => {
-                        setType(value);
-                      }}
-                    >
-                      {value == "image" && <ImageIcon className="h-6 w-6" />}
-                      {value == "clipboard" && <ClipboardPasteIcon className="h-6 w-6" />}
-                      {value == "link" && <LinkIcon className="h-6 w-6" />}
-                      {name}
-                    </div>
-
+                  <div className="flex flex-col cursor-pointer rounded-lg font-semibold border border-gray-200 p-6 text-center bg-green-700 hover:bg-gray-700"
+                    onClick={async () => {
+                      setType(value);
+                    }}>
+                    {value == "image" && <ImageIcon className="h-6 w-6" />}
+                    {value == "clipboard" && <ClipboardPasteIcon className="h-6 w-6" />}
+                    {value == "link" && <LinkIcon className="h-6 w-6" />}
+                    {name}
                   </div>
                 ))}
-
               </div>
             </div>
           </div>
