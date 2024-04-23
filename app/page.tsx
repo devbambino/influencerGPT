@@ -14,19 +14,10 @@ export default function Chat() {
   });
 
   const types = [
-    { value: "image", name: "From image" },
-    { value: "clipboard", name: "From text" },
-    { value: "link", name: "From link" },
+    { value: "image", name: "Use an image..." },
+    { value: "clipboard", name: "From some text..." },
+    { value: "link", name: "From a link..." },
   ];
-
-  const handleChange = ({
-    target: { name, value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      [name]: value,
-    });
-  };
 
   const handleInput = ({
     target: { name, value },
@@ -41,8 +32,15 @@ export default function Chat() {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="loader">
-          <div className="animate-pulse flex flex-col justify-center items-center ">
-            <div className="rounded-full bg-slate-700 h-10 w-10"></div>
+          <div className="animate-pulse text-slate-700 flex flex-col justify-center items-center ">
+            <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round">
+              <path stroke="currentColor" d="M16.872 9.687 20 6.56 17.44 4 4 17.44 6.56 20 16.873 9.687Zm0 0-2.56-2.56M6 7v2m0 0v2m0-2H4m2 0h2m7 7v2m0 0v2m0-2h-2m2 0h2M8 4h.01v.01H8V4Zm2 2h.01v.01H10V6Zm2-2h.01v.01H12V4Zm8 8h.01v.01H20V12Zm-2 2h.01v.01H18V14Zm2 2h.01v.01H20V16Z" />
+            </svg>
             <div>The magic is happening...bear with us...</div>
           </div>
         </div>
@@ -114,22 +112,29 @@ export default function Chat() {
     )
   }
 
+  function copyText(entryText: string) {
+    navigator.clipboard.writeText(entryText);
+  }
+
   if (!type) {
     return (
       <div className="flex flex-col h-screen w-full">
         <div className="flex-1 flex items-center justify-center p-4 text-center">
-          <div className="grid gap-4 text-sm leading-loose md:text-base">
-            <p>The Super APP is the one app you need for all your daily tasks.</p>
-            <div className="mx-auto w-[400px] ">
-              <div className="grid grid-cols-3 gap-4">
+          <div className="grid gap-4">
+            <h2 className="w-full text-center text-2xl text-green-500 font-bold">Welcome to influencerGPT</h2>
+            <p className="w-full text-center text-xl text-zinc-500 dark:text-zinc-400">
+              We create social networks posts for you from whatever you shared with us:
+            </p>
+            <div className="mx-auto w-[400px] mt-8">
+              <div className="grid grid-cols-3 gap-4 text-green-500">
                 {types.map(({ value, name }) => (
-                  <div className="flex flex-col cursor-pointer rounded-lg font-semibold border border-gray-200 p-6 text-center bg-green-700 hover:bg-gray-700"
+                  <div key={value} className="flex flex-col items-center justify-center cursor-pointer rounded-lg font-semibold hover:bg-green-500 hover:text-white border border-green-500 p-4 text-center "
                     onClick={async () => {
                       setType(value);
                     }}>
-                    {value == "image" && <ImageIcon className="h-6 w-6" />}
-                    {value == "clipboard" && <ClipboardPasteIcon className="h-6 w-6" />}
-                    {value == "link" && <LinkIcon className="h-6 w-6" />}
+                    {value == "image" && <ImageIcon className="h-6 w-6 mb-2" />}
+                    {value == "clipboard" && <ClipboardPasteIcon className="h-6 w-6 mb-2" />}
+                    {value == "link" && <LinkIcon className="h-6 w-6 mb-2" />}
                     {name}
                   </div>
                 ))}
@@ -141,24 +146,14 @@ export default function Chat() {
     );
   }
 
-  function copyText(entryText: string) {
-    navigator.clipboard.writeText(entryText);
-  }
-
   return (
     <div className="px-4 py-6 md:py-8 lg:py-10">
       <div className="flex flex-col gap-4 max-w-3xl mx-auto">
         <div className="flex flex-col gap-2">
-          <div className="space-y-2">
-            <h2 className="w-full text-center text-3xl text-green-500 font-bold">influencerGPT App v0</h2>
-            <p className="w-full text-center text-zinc-500 dark:text-zinc-400">
-              We create social networks posts for you from whatever you shared with us.
-            </p>
-          </div>
-
           <div className="flex flex-col gap-2">
             {messages.length == 0 && (
               <div className="w-full">
+                <h2 className="w-full text-xl text-green-500 font-bold">Hello, guest!!!</h2>
                 <p className="my-2 text-md leading-6 b-0">
                   Write/Paste here what you want to share and we'll generate for you an engaging version of it ready to be posted on social networks:
                 </p>
@@ -167,7 +162,7 @@ export default function Chat() {
             )}
             <form className="flex flex-row items-start gap-2 md:gap-4">
               <button
-                className="w-full md:w-auto order-2 md:order-1 m-2 bg-green-700 hover:bg-gray-700 text-white py-2 px-4 rounded disabled:opacity-50"
+                className="inline-flex items-center w-full md:w-auto order-1 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-50"
                 hidden={messages.length > 0}
                 disabled={isLoading}
                 onClick={async () => {
@@ -190,9 +185,19 @@ export default function Chat() {
                   };
                   messages.push(chats);
                 }}
-              >Generate post</button>
+              >
+                <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round">
+                  <path stroke="currentColor" d="M16.872 9.687 20 6.56 17.44 4 4 17.44 6.56 20 16.873 9.687Zm0 0-2.56-2.56M6 7v2m0 0v2m0-2H4m2 0h2m7 7v2m0 0v2m0-2h-2m2 0h2M8 4h.01v.01H8V4Zm2 2h.01v.01H10V6Zm2-2h.01v.01H12V4Zm8 8h.01v.01H20V12Zm-2 2h.01v.01H18V14Zm2 2h.01v.01H20V16Z" />
+                </svg>
+                <span>Generate post</span>
+              </button>
               <button
-                className="w-full md:w-auto order-1 md:order-2 m-2 bg-green-700 hover:bg-gray-700 text-white py-2 px-4 rounded disabled:opacity-50"
+                className="inline-flex items-center w-full md:w-auto order-2 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-500"
                 hidden={messages.length != 1}
                 disabled={isLoading}
                 onClick={async () => {
@@ -219,20 +224,37 @@ export default function Chat() {
                   });
                   setIsLoading(false);
                 }}>
-                Generate tweets
+                <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round">
+                  <path fill-rule="evenodd" d="M22 5.892a8.178 8.178 0 0 1-2.355.635 4.074 4.074 0 0 0 1.8-2.235 8.343 8.343 0 0 1-2.605.981A4.13 4.13 0 0 0 15.85 4a4.068 4.068 0 0 0-4.1 4.038c0 .31.035.618.105.919A11.705 11.705 0 0 1 3.4 4.734a4.006 4.006 0 0 0 1.268 5.392 4.165 4.165 0 0 1-1.859-.5v.05A4.057 4.057 0 0 0 6.1 13.635a4.192 4.192 0 0 1-1.856.07 4.108 4.108 0 0 0 3.831 2.807A8.36 8.36 0 0 1 2 18.184 11.732 11.732 0 0 0 8.291 20 11.502 11.502 0 0 0 19.964 8.5c0-.177 0-.349-.012-.523A8.143 8.143 0 0 0 22 5.892Z" clip-rule="evenodd" />
+                </svg>
+                <span>Generate tweets</span>
               </button>
               <button
-                className="w-full md:w-auto order-2 md:order-1 m-2 bg-green-700 hover:bg-gray-700 text-white py-2 px-4 rounded disabled:opacity-50"
+                className="inline-flex items-center w-full md:w-auto order-3 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-50"
                 hidden={messages.length < 2}
                 disabled={isLoading}
                 onClick={async () => {
                   window.location.reload();
                 }}
-              >Reset</button>
+              >
+                <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round">
+                  <path stroke="currentColor" d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4" />
+                </svg>
+                <span>Reset</span>
+              </button>
             </form>
           </div>
         </div>
-        <div className="w-full h-screen bg-green-300"></div>
 
         {messages.length > 0 && !isLoading && (
           <div className="flex flex-col gap-2">
@@ -254,12 +276,10 @@ export default function Chat() {
                 className="hover:bg-green-700 text-white rounded disabled:opacity-50"
                 href="https://www.linkedin.com/feed/?linkOrigin=LI_BADGE&shareActive=true" target="_blank"
                 onClick={() => copyText(messages[0].content)}>
-                <Image
-                  src="/images/linkedin-128.png" // Route of the image file
-                  height={30} // Desired size with correct aspect ratio
-                  width={30} // Desired size with correct aspect ratio
-                  alt="Send text to Linkedin"
-                />
+                <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" d="M12.51 8.796v1.697a3.738 3.738 0 0 1 3.288-1.684c3.455 0 4.202 2.16 4.202 4.97V19.5h-3.2v-5.072c0-1.21-.244-2.766-2.128-2.766-1.827 0-2.139 1.317-2.139 2.676V19.5h-3.19V8.796h3.168ZM7.2 6.106a1.61 1.61 0 0 1-.988 1.483 1.595 1.595 0 0 1-1.743-.348A1.607 1.607 0 0 1 5.6 4.5a1.601 1.601 0 0 1 1.6 1.606Z" clip-rule="evenodd" />
+                  <path d="M7.2 8.809H4V19.5h3.2V8.809Z" />
+                </svg>
               </a>
             </div>
 
