@@ -9,7 +9,7 @@ export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const [type, setType] = useState("");
   const [post, setPost] = useState("");
-  const [tweets, setTweets] = useState([]);
+  const [tweets, setTweets] = useState<string[]>([]);
   const [state, setState] = useState({
     article: "",
     type: ""
@@ -34,7 +34,7 @@ export default function Chat() {
     return (
       <div className="flex justify-center items-center h-screen">
         <div className="loader">
-          <div className="animate-pulse text-slate-700 flex flex-col justify-center items-center ">
+          <div className="animate-pulse text-slate-300 flex flex-col justify-center items-center ">
             <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
               fill="none"
               stroke="currentColor"
@@ -169,23 +169,18 @@ export default function Chat() {
                   disabled={isLoading}
                   onClick={async () => {
                     setIsLoading(true);
-                    const response = await fetch("api/social", {
+                    const response = await fetch("api/post", {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json",
                       },
                       body: JSON.stringify({
-                        message: { role: "user", content: state.article },
+                        userPrompt: state.article,
                       }),
                     });
                     const data = await response.json();
                     setIsLoading(false);
-                    const chats: Message = {
-                      "id": "social",
-                      "role": "user",
-                      "content": data
-                    };
-                    messages.push(chats);
+                    setPost(data.text);
                   }}
                 >
                   <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -201,7 +196,7 @@ export default function Chat() {
               )}
               {post && tweets.length == 0 && (
                 <button
-                  className="items-center w-full md:w-auto order-2 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-500"
+                  className="inline-flex items-center w-full md:w-auto order-2 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-500"
                   disabled={isLoading}
                   onClick={async () => {
                     setIsLoading(true);
@@ -211,19 +206,19 @@ export default function Chat() {
                         "Content-Type": "application/json",
                       },
                       body: JSON.stringify({
-                        message: { role: "user", content: messages[0].content },
+                        userPrompt: post,
                       }),
                     });
                     const data = await response.json();
-                    const cleanedJsonString = data.replace(/^```json\s*|```\s*$/g, '');
+                    const cleanedJsonString = data.text.replace(/^```json\s*|```\s*$/g, '');
                     const tweetsJson = JSON.parse(cleanedJsonString);
                     tweetsJson.forEach((tweet: { tweet: string; }, index: number) => {
-                      const tweets: Message = {
-                        "id": "tweets",
-                        "role": "assistant",
-                        "content": tweet.tweet
-                      };
-                      messages.push(tweets);
+                      setTweets( // Replace the state
+                        [ // with a new array
+                          ...tweets, // that contains all the old items
+                          tweet.tweet// and one new item at the end
+                        ]
+                      );
                     });
                     setIsLoading(false);
                   }}>
@@ -240,7 +235,7 @@ export default function Chat() {
               )}
               {post && tweets.length > 0 && (
                 <button
-                  className="items-center w-full md:w-auto order-3 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-50"
+                  className="inline-flex items-center w-full md:w-auto order-3 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-50"
                   hidden={post.length == 0 || tweets.length == 0}
                   disabled={isLoading}
                   onClick={async () => {
@@ -262,7 +257,7 @@ export default function Chat() {
           </div>
         </div>
 
-        {messages.length > 0 && !isLoading && (
+        {post && !isLoading && (
           <div className="flex flex-col gap-2">
             <div className="space-y-2">
               <h2 className="text-lg text-green-500 font-semibold tracking-tight">Here's the social network post:</h2>
@@ -271,17 +266,17 @@ export default function Chat() {
               className="min-h-[100px] border text-black p-3 m-2 rounded"
               id="summary"
               placeholder="The post will appear here."
-              value={messages[0].content}
+              value={post}
               readOnly
             />
-            <div className="flex flex-row items-start text-center gap-2 m-2">
+            <div className="flex flex-row items-center text-center gap-2 m-2">
               <p className="text-sm leading-6 b-0 text-white">
-                Click the logo to copy to clipboard & open in:
+                Click the logo of the social network to copy to clipboard & open it:
               </p>
               <a
-                className="hover:bg-green-700 text-white rounded disabled:opacity-50"
+                className="hover:bg-green-500 text-green-500 hover:text-white border border-green-500 p-2 rounded disabled:opacity-50"
                 href="https://www.linkedin.com/feed/?linkOrigin=LI_BADGE&shareActive=true" target="_blank"
-                onClick={() => copyText(messages[0].content)}>
+                onClick={() => copyText(post)}>
                 <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                   <path fill-rule="evenodd" d="M12.51 8.796v1.697a3.738 3.738 0 0 1 3.288-1.684c3.455 0 4.202 2.16 4.202 4.97V19.5h-3.2v-5.072c0-1.21-.244-2.766-2.128-2.766-1.827 0-2.139 1.317-2.139 2.676V19.5h-3.19V8.796h3.168ZM7.2 6.106a1.61 1.61 0 0 1-.988 1.483 1.595 1.595 0 0 1-1.743-.348A1.607 1.607 0 0 1 5.6 4.5a1.601 1.601 0 0 1 1.6 1.606Z" clip-rule="evenodd" />
                   <path d="M7.2 8.809H4V19.5h3.2V8.809Z" />
@@ -291,31 +286,28 @@ export default function Chat() {
 
           </div>
         )}
-        {messages.length > 1 && !isLoading && (
+        {tweets.length > 0 && !isLoading && (
           <div className="flex flex-col gap-2">
             <div className="space-y-2">
               <h2 className="text-lg text-green-500 font-semibold tracking-tight">Here are the tweets:</h2>
             </div>
-            {messages.slice(1).map((tweet) => (
+            {tweets.map((tweet) => (
               <div className="flex flex-col items-center m-2">
                 <div
                   className="w-full bg-white p-3 rounded border text-black"
-                >{tweet.content}
+                >{tweet}
                 </div>
-                <div className="flex flex-row gap-2 m-2 align-middle">
+                <div className="flex flex-row items-center gap-2 m-2 align-middle">
                   <span className="text-sm leading-6 text-white">
                     Click the logo to copy and send the tweet to:
                   </span>
                   <a
-                    className="hover:bg-green-700 p-1 text-white rounded disabled:opacity-50"
+                    className="hover:bg-green-500 text-green-500 hover:text-white border border-green-500 p-2 rounded disabled:opacity-50"
                     href="https://twitter.com/intent/tweet?text=" target="_blank"
-                    onClick={() => copyText(tweet.content)}>
-                    <Image
-                      src="/images/twitter-128.png" // Route of the image file
-                      height={20} // Desired size with correct aspect ratio
-                      width={20} // Desired size with correct aspect ratio
-                      alt="Send text to Twitter/X"
-                    />
+                    onClick={() => copyText(tweet)}>
+                    <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M13.795 10.533 20.68 2h-3.073l-5.255 6.517L7.69 2H1l7.806 10.91L1.47 22h3.074l5.705-7.07L15.31 22H22l-8.205-11.467Zm-2.38 2.95L9.97 11.464 4.36 3.627h2.31l4.528 6.317 1.443 2.02 6.018 8.409h-2.31l-4.934-6.89Z" />
+                    </svg>
                   </a>
                 </div>
               </div>
