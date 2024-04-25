@@ -6,7 +6,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "InfluencerGPT App v0",
+  title: "InfluencerGPT App v1",
   description: "We create social networks posts for you from whatever you shared with us",
 };
 
