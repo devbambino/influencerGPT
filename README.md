@@ -1,4 +1,4 @@
-# InfluencerGPT v0
+# InfluencerGPT v1
 🚀 Introducing InfluencerGPT, the AI sidekick for social media mavens! This innovative app is primed to revolutionize the content creation workflow. Created for the Google AI Hackathon.
 
 ## Features
@@ -6,11 +6,11 @@ Here's what you get:
 
 - 📝 **Automatic Post Generation**: Type in your core message and watch as the app transforms it into captivating social media content.
 
-- 🔄 **Multi-Platform Post Customization**: Get varied Twitter/X post versions from the initial post, optimized for each platform.
+- 🔄 **Multi-Platform Post Customization**: With customized versions for Linkedin, Facebook and Instagram. You also get varied Twitter/X post versions from the initial post, optimized for the platform.
 
 - 🌍 **One-Click Posting**: Effortlessly send your polished posts to LinkedIn or Twitter with a single click.
 
-- 🔍 **Local LLM API Integration**: Connect with a powerful WizardLM-2-7B language model for personalized text generation.
+- 🔍 **Gemini Pro 1.5 Integration**: Connect with the powerful Gemini Pro 1.5 language model for personalized text generation using the Google AI's API.
 
 - 🎉 **User-Friendly Interface**: Enjoy a responsive web app experience with a sleek, modern design by tailwindCSS.
 
