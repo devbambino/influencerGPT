@@ -1,8 +1,9 @@
 "use client";
 
-import { JSX, SVGProps, useState } from "react";
+import { JSX, SVGProps, useState, ChangeEvent } from "react";
 import { Message, useChat } from "ai/react";
 import Image from 'next/image';
+import toast from "react-hot-toast";
 
 export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,6 +11,10 @@ export default function Chat() {
   const [article, setArticle] = useState("");
   const [post, setPost] = useState("");
   const [tweets, setTweets] = useState<string[]>([]);
+  const [imageData, setImageData] = useState<string | null>(null);
+  const [mimeType, setMimeType] = useState<string | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+
 
   const types = [
     { value: "image", name: "Use an image..." },
@@ -18,13 +23,13 @@ export default function Chat() {
   ];
 
   const medias = [
+    { value: "linkedin", name: "Linkedin" },
     { value: "facebook", name: "Facebook" },
     { value: "instagram", name: "Instagram" },
-    { value: "linkedin", name: "Linkedin" },
   ];
 
   const [state, setState] = useState({
-    media: "",
+    media: "linkedin",
   });
 
   function ClipboardPasteIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
@@ -93,6 +98,7 @@ export default function Chat() {
 
   function copyText(entryText: string) {
     navigator.clipboard.writeText(entryText);
+    toast.success('Copied to clipboard!');
   }
 
   const handleArticle = (event: { target: { value: any; }; }) => {
@@ -107,6 +113,27 @@ export default function Chat() {
       ...state,
       [name]: value,
     });
+  };
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files ? event.target.files[0] : null;
+
+    if (file) {
+      const fileType = file.type;
+      setMimeType(fileType); // Set MIME type in state
+
+      if (/^image\/(jpeg|png|gif)$/.test(fileType)) {
+        const reader = new FileReader();
+        reader.onloadend = function () {
+          const resultBase64 = reader.result as string;
+          setImageData(resultBase64.split(",")[1]); // Set base64 string in state
+          setImagePreviewUrl(resultBase64); // Set image URL for preview
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('File type not supported. Please upload an image (jpeg, png, gif).');
+      }
+    }
   };
 
   if (isLoading) {
@@ -190,11 +217,35 @@ export default function Chat() {
                     ))}
                   </div>
                 </div>
-                <div className="my-3 space-y-4 bg-opacity-25 bg-gray-700 rounded-lg p-4">
+                <div className="justify-center items-center my-1 space-y-4 bg-opacity-25 bg-gray-700 rounded-lg p-4">
                   <h3 className="text-md leading-6 font-semibold">
-                    <span className="w-full text-xl text-green-500 font-bold">Step 2 /</span> Write or Paste here what you want to share and we'll generate for you an engaging version of it ready to be posted on social networks...
+                    <span className="w-full text-xl text-green-500 font-bold">Step 2 / </span>
+                    {
+                      type == "image" ?
+                        "Upload the image you want to use and write a short description explaining how you want us to use it..." :
+                        "Write or Paste here what you want to share and we'll generate for you an engaging version of it ready to be posted on social networks..."
+                    }
                   </h3>
-                  <textarea className="w-full min-h-[200px] border rounded text-black" name="article" disabled={isLoading} id="text" placeholder="Enter the text here..." value={article} onChange={handleArticle} />
+                  {
+                    type == "image" ?
+                      <>
+                        <label className="flex flex-row text-center justify-center items-center sm:w-full md:w-1/2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-50">
+                          <input type="file" accept="image/*" onChange={handleFileChange} />
+                          <svg className="w-6 h-6 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill-rule="evenodd" d="M13 10a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H14a1 1 0 0 1-1-1Z" clip-rule="evenodd" />
+                            <path fill-rule="evenodd" d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12c0 .556-.227 1.06-.593 1.422A.999.999 0 0 1 20.5 20H4a2.002 2.002 0 0 1-2-2V6Zm6.892 12 3.833-5.356-3.99-4.322a1 1 0 0 0-1.549.097L4 12.879V6h16v9.95l-3.257-3.619a1 1 0 0 0-1.557.088L11.2 18H8.892Z" clip-rule="evenodd" />
+                          </svg>
+                          Select image...
+                        </label>
+                        {imagePreviewUrl && (
+                          <div className="flex flex-row justify-center gap-2">
+                            <img onClick={() => copyText(imageData!)} src={imagePreviewUrl} alt="Preview" style={{ height: '100%', maxHeight: '100px' }} />
+                            <textarea className="w-full min-h-[100px] border rounded text-black" name="article" disabled={isLoading} id="text" placeholder="Enter the short description here..." value={article} onChange={handleArticle} />
+                          </div>
+                        )}
+                      </> :
+                      <textarea className="w-full min-h-[200px] border rounded text-black" name="article" disabled={isLoading} id="text" placeholder="Enter the text here..." value={article} onChange={handleArticle} />
+                  }
                 </div>
               </div>
             )}
@@ -202,22 +253,40 @@ export default function Chat() {
               {!post && (
                 <button
                   className="inline-flex text-center justify-center items-center w-full md:w-auto order-1 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-50"
-                  disabled={!article && !state.media}
+                  disabled={!article}
                   onClick={async () => {
                     setIsLoading(true);
-                    const response = await fetch("api/post", {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        userPrompt: article,
-                        media: state.media,
-                      }),
-                    });
-                    const data = await response.json();
+                    if (type == "image") {
+                      const response = await fetch("api/vision", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          userPrompt: article,
+                          media: state.media,
+                          mimeType: mimeType,
+                          imageData: imageData
+                        }),
+                      });
+                      const data = await response.json();
+                      setPost(data.text);
+                    } else {
+                      const response = await fetch("api/post", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          userPrompt: article,
+                          media: state.media,
+                        }),
+                      });
+                      const data = await response.json();
+                      setPost(data.text);
+                    }
+
                     setIsLoading(false);
-                    setPost(data.text);
                   }}
                 >
                   <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -249,7 +318,7 @@ export default function Chat() {
                     const data = await response.json();
                     const cleanedJsonString = data.text.replace(/^```json\s*|```\s*$/g, '');
                     const tweetsJson = JSON.parse(cleanedJsonString);
-                    tweetsJson.map((tweet: { tweet: string; }) => (
+                    tweetsJson.tweets.map((tweet: { tweet: string; }) => (
                       tweets.push(tweet.tweet)
                     ));
                     setTweets(tweets);
@@ -266,7 +335,7 @@ export default function Chat() {
                   <span>Generate tweets</span>
                 </button>
               )}
-              {post && tweets.length > 0 && (
+              {post && (
                 <button
                   className="inline-flex items-center w-full md:w-auto order-3 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-50"
                   hidden={post.length == 0 || tweets.length == 0}
@@ -336,9 +405,9 @@ export default function Chat() {
         {tweets.length > 0 && !isLoading && (
           <div className="flex flex-col gap-2">
             <div className="space-y-2">
-              <h2 className="text-xl text-green-500 font-semibold tracking-tight">Here are the tweets:</h2>
+              <h2 className="text-xl text-green-500 font-semibold tracking-tight">Here are the tweets for a Thread:</h2>
             </div>
-            {tweets.map((tweet) => (
+            {tweets.map((tweet, index) => (
               <div className="flex flex-col items-center m-2">
                 <div
                   className="w-full bg-white p-3 rounded border text-black"
@@ -346,16 +415,26 @@ export default function Chat() {
                 </div>
                 <div className="flex flex-row items-center gap-2 m-2 align-middle">
                   <span className="text-md leading-6 b-0 text-white">
-                    Click the logo to copy and send the tweet to:
+                    {index == 0 ? "Click the logo to copy and send the tweet to:" : "Click the logo to copy the tweet:"}
                   </span>
-                  <a
-                    className="hover:bg-green-500 text-green-500 hover:text-white border border-green-500 p-2 rounded disabled:opacity-50"
-                    href={"https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet)} target="_blank"
-                    onClick={() => copyText(tweet)}>
-                    <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M13.795 10.533 20.68 2h-3.073l-5.255 6.517L7.69 2H1l7.806 10.91L1.47 22h3.074l5.705-7.07L15.31 22H22l-8.205-11.467Zm-2.38 2.95L9.97 11.464 4.36 3.627h2.31l4.528 6.317 1.443 2.02 6.018 8.409h-2.31l-4.934-6.89Z" />
-                    </svg>
-                  </a>
+                  {index == 0 ?
+                    <a
+                      className="hover:bg-green-500 text-green-500 hover:text-white border border-green-500 p-2 rounded disabled:opacity-50"
+                      href={"https://twitter.com/intent/tweet?text=" + encodeURIComponent(tweet)} target="_blank"
+                      onClick={() => copyText(tweet)}>
+                      <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M13.795 10.533 20.68 2h-3.073l-5.255 6.517L7.69 2H1l7.806 10.91L1.47 22h3.074l5.705-7.07L15.31 22H22l-8.205-11.467Zm-2.38 2.95L9.97 11.464 4.36 3.627h2.31l4.528 6.317 1.443 2.02 6.018 8.409h-2.31l-4.934-6.89Z" />
+                      </svg>
+                    </a> :
+                    <a
+                      className="cursor-pointer hover:bg-green-500 text-green-500 hover:text-white border border-green-500 p-2 rounded disabled:opacity-50"
+                      onClick={() => copyText(tweet)}>
+                      <svg className="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" d="M7 9v6a4 4 0 0 0 4 4h4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1v2Z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd" d="M13 3.054V7H9.2a2 2 0 0 1 .281-.432l2.46-2.87A2 2 0 0 1 13 3.054ZM15 3v4a2 2 0 0 1-2 2H9v6a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-3Z" clip-rule="evenodd" />
+                      </svg>
+                    </a>}
+
                 </div>
               </div>
             ))}
