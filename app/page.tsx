@@ -4,6 +4,7 @@ import { JSX, SVGProps, useState, ChangeEvent } from "react";
 import { Message, useChat } from "ai/react";
 import Image from 'next/image';
 import toast from "react-hot-toast";
+import axios from 'axios';
 
 export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
@@ -223,7 +224,9 @@ export default function Chat() {
                     {
                       type == "image" ?
                         "Upload the image you want to use and write a short description explaining how you want us to use it..." :
-                        "Write or Paste here what you want to share and we'll generate for you an engaging version of it ready to be posted on social networks..."
+                        type == "link" ?
+                          "Paste here the link of the page and we'll generate for you an engaging version of it ready to be posted on social networks..." :
+                          "Write or Paste here what you want to share and we'll generate for you an engaging version of it ready to be posted on social networks..."
                     }
                   </h3>
                   {
@@ -271,6 +274,10 @@ export default function Chat() {
                       });
                       const data = await response.json();
                       setPost(data.text);
+                    } else if (type == "link") {
+                      const response = await fetch(article.trim());
+                      const data = await response.text();
+                      setPost(data);
                     } else {
                       const response = await fetch("api/post", {
                         method: "POST",
@@ -318,7 +325,7 @@ export default function Chat() {
                     const data = await response.json();
                     const cleanedJsonString = data.text.replace(/^```json\s*|```\s*$/g, '');
                     const tweetsJson = JSON.parse(cleanedJsonString);
-                    tweetsJson.tweets.map((tweet: { tweet: string; }) => (
+                    tweetsJson.map((tweet: { tweet: string; }) => (
                       tweets.push(tweet.tweet)
                     ));
                     setTweets(tweets);
@@ -335,26 +342,24 @@ export default function Chat() {
                   <span>Generate tweets</span>
                 </button>
               )}
-              {post && (
-                <button
-                  className="inline-flex items-center w-full md:w-auto order-3 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-50"
-                  hidden={post.length == 0 || tweets.length == 0}
-                  disabled={isLoading}
-                  onClick={async () => {
-                    window.location.reload();
-                  }}
-                >
-                  <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round">
-                    <path stroke="currentColor" d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4" />
-                  </svg>
-                  <span>Reset</span>
-                </button>
-              )}
+              <button
+                className="inline-flex items-center w-full md:w-auto order-3 m-2 font-bold hover:bg-green-500 text-green-500 hover:text-white border border-green-500 py-2 px-4 rounded disabled:opacity-50"
+                hidden={post.length == 0 || tweets.length == 0}
+                disabled={isLoading}
+                onClick={async () => {
+                  window.location.reload();
+                }}
+              >
+                <svg className="w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round">
+                  <path stroke="currentColor" d="M17.651 7.65a7.131 7.131 0 0 0-12.68 3.15M18.001 4v4h-4m-7.652 8.35a7.13 7.13 0 0 0 12.68-3.15M6 20v-4h4" />
+                </svg>
+                <span>Reset</span>
+              </button>
             </form>
           </div>
         </div>
