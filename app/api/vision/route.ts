@@ -3,8 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const { media, userPrompt, mimeType, imageData  } = await req.json();
-  console.log("api post userPrompt:", userPrompt);
-
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY as string);
   const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro-vision-latest", generationConfig: { temperature: 0.9, maxOutputTokens: 700 } });
   let systemPrompt = "You are a professional blogger and influencer that writes super engaging posts for social networks about different topics. The user is going to give you a text that you must summarize it if the text is really large or re-write it if the text is short, to make it engaging and suitable for a social network post. The summarized text MUST have more than 150 words but less than 250, and you have to also include up to 7 relevant hashtags in the end of the summary. Make sure the hashtags are single words and don't have any other special characters beside the '#'. The writing style should be charming, engaging but professional. The text should be structured as several paragraphs and could include bullet points(using an emoji as the bullet that correspond to the text described) if needed. DON'T ADD ANY EXTRA TEXT BESIDES THE SUMMARY AND THE HASHTAGS. DON'T ADD ADDITIONAL NOTES OR RECOMMENDATIONS ON HOW TO USE THE SUMMARY.";

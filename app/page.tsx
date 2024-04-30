@@ -225,7 +225,7 @@ export default function Chat() {
                       type == "image" ?
                         "Upload the image you want to use and write a short description explaining how you want us to use it..." :
                         type == "link" ?
-                          "Paste here the link of the page and we'll generate for you an engaging version of it ready to be posted on social networks..." :
+                          "Paste here the link of the page and we'll generate for you an engaging text from it ready to be posted on social networks..." :
                           "Write or Paste here what you want to share and we'll generate for you an engaging version of it ready to be posted on social networks..."
                     }
                   </h3>
@@ -247,6 +247,8 @@ export default function Chat() {
                           </div>
                         )}
                       </> :
+                      type == "link" ?
+                      <textarea className="w-full min-h-[100px] border rounded text-black" name="article" disabled={isLoading} id="text" placeholder="Enter the link here..." value={article} onChange={handleArticle} /> :
                       <textarea className="w-full min-h-[200px] border rounded text-black" name="article" disabled={isLoading} id="text" placeholder="Enter the text here..." value={article} onChange={handleArticle} />
                   }
                 </div>
@@ -275,9 +277,23 @@ export default function Chat() {
                       const data = await response.json();
                       setPost(data.text);
                     } else if (type == "link") {
-                      const response = await fetch(article.trim());
-                      const data = await response.text();
-                      setPost(data);
+                      const responseScraping = await fetch(article.trim());
+                      const dataScraping = await responseScraping.text();
+                      //console.log("link dataScraping: ",dataScraping);
+                      const response = await fetch("api/scraping", {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          userPrompt: dataScraping,
+                          media: state.media,
+                        }),
+                      });
+                      const data = await response.json();
+                      //console.log("link data: ",data)
+                      setPost(data.text);
+
                     } else {
                       const response = await fetch("api/post", {
                         method: "POST",
