@@ -23,9 +23,7 @@ export async function POST(req: NextRequest) {
   try {
     const result = await model.generateContent([systemPrompt, userPrompt]);
     const response = await result.response;
-    //console.log("api post:", response);
     const text = response.text();
-    //console.log("api post text:", text);
     return NextResponse.json({
       text
     });

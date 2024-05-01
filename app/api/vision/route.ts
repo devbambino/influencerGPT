@@ -33,9 +33,7 @@ export async function POST(req: NextRequest) {
 
     const result = await model.generateContent([systemPrompt, ...parts]);
     const response = await result.response;
-    //console.log("api vision:", response);
     const text = response.text();
-    //console.log("api vision text:", text);
     return NextResponse.json({
       text
     });

@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   const { userPrompt, media } = await req.json();
-  console.log("api post userPrompt:", userPrompt);
 
   const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY as string);
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest", generationConfig: { temperature: 0.8, maxOutputTokens: 700 } });
@@ -25,9 +24,7 @@ export async function POST(req: NextRequest) {
   try {
     const result = await model.generateContent([systemPrompt, userPrompt]);
     const response = await result.response;
-    //console.log("api post:", response);
     const text = response.text();
-    //console.log("api post text:", text);
     return NextResponse.json({
       text
     });

@@ -1,18 +1,19 @@
 # InfluencerGPT v1
-🚀 Introducing InfluencerGPT, the AI sidekick for social media mavens! This innovative app is primed to revolutionize the content creation workflow. Created for the Google AI Hackathon.
+🚀 Unveiling InfluencerGPT: Your AI-Powered Content Creation Companion! 
+This innovative app is designed to streamline your social media presence by transforming text, images, or URLs into engaging posts. 🤯
 
 ## Features
-Here's what you get:
+Here's what it offers:
 
-- 📝 **Automatic Post Generation**: Type in your core message and watch as the app transforms it into captivating social media content.
+- 🪄 **Automated Post Generation:** Craft compelling social media content from various inputs, saving you time and effort. 
 
-- 🔄 **Multi-Platform Post Customization**: With customized versions for Linkedin, Facebook and Instagram. You also get varied Twitter/X post versions from the initial post, optimized for the platform.
+- ✂️ **Twitter Thread Creation:** Seamlessly convert your post into a captivating Twitter thread for maximum engagement.
 
-- 🌍 **One-Click Posting**: Effortlessly send your polished posts to LinkedIn or Twitter with a single click.
+- 📲 **Effortless Sharing:** Share your generated content directly to LinkedIn, Facebook, Instagram, or Twitter/X with a single click. 
 
-- 🔍 **Gemini Pro 1.5 Integration**: Connect with the powerful Gemini Pro 1.5 language model for personalized text generation using the Google AI's API.
+- 🧠 **Powered by Gemini Pro:** Leverages advanced AI capabilities for top-notch content quality.
 
-- 🎉 **User-Friendly Interface**: Enjoy a responsive web app experience with a sleek, modern design by tailwindCSS.
+- 💻 **Responsive Design:** Enjoy a user-friendly experience across all devices. 
 
 ## Screenshots
 
@@ -34,6 +35,7 @@ Here's what you get:
 ### Easy and quick share to Twitter
 <img src="res/influGPT-6.png" width="400" height="400">
 
+
 ## Tech behind
 
-This app is connecting locally to a LLM using the text-gen-webui API.
+This app is using Google AI API for connecting to Gemini Pro 1.5 LLM.

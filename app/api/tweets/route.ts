@@ -11,10 +11,7 @@ export async function POST(req: Request) {
   try {
     const result = await model.generateContent([systemPrompt,userPrompt]);
     const response = await result.response;
-    //console.log("api tweets:", response);
     const text = response.text();
-    //const cleanedJsonString = text.replace(/^```json\s*|```\s*$/g, '');
-    //console.log("api tweets cleanedJsonString:", cleanedJsonString);
     return NextResponse.json({
       text
     });
