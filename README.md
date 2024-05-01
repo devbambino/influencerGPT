@@ -6,20 +6,20 @@ This innovative app is designed to streamline the social media presence of busin
 Here's what it offers:
 
 - 🪄 **Automated Post Generation:** Craft compelling social media content from various inputs, saving you time and effort. 
-<img src="res/inf-home.png" width="400" height="400">
-<img src="res/inf-image.png" width="400" height="400">
-<img src="res/inf-text.png" width="400" height="400">
-<img src="res/inf-link.png" width="400" height="400">
+<img src="res/inf-home.png" width="612" height="300">
+<img src="res/inf-image.png" width="612" height="300">
+<img src="res/inf-text.png" width="612" height="300">
+<img src="res/inf-link.png" width="612" height="300">
 
 - ✂️ **Twitter Thread Creation:** Seamlessly convert your post into a captivating Twitter thread for maximum engagement.
-<img src="res/inf-text-result.png" width="400" height="400">
+<img src="res/inf-text-result.png" width="612" height="300">
 
 - 📲 **Effortless Sharing:** Share your generated content directly to LinkedIn, Facebook, Instagram, or Twitter/X with a single click. 
-<img src="res/inf-text-result-linkedin.png" width="400" height="400">
-<img src="res/inf-text-result-twitter.png" width="400" height="400">
+<img src="res/inf-text-result-linkedin.png" width="612" height="300">
+<img src="res/inf-text-result-twitter.png" width="612" height="300">
 
 - 🧠 **Powered by Gemini Pro:** Leverages advanced AI capabilities for top-notch content quality.
-<img src="res/inf-magic.png" width="400" height="400">
+<img src="res/inf-magic.png" width="612" height="300">
 
 - 💻 **Responsive Design:** Enjoy a user-friendly experience across all devices. 
 
