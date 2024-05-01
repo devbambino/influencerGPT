@@ -12,7 +12,6 @@ import ResetButton from "./components/resetbtn";
 import GeneratePostButton from "./components/generatepostbtn";
 import GenerateTweetsButton from "./components/generatetweetsbtn";
 import GeneratedPost from "./components/generatedpost";
-import GeneratedTweets from "./components/generatedtweets";
 
 export default function Chat() {
   // State variables with initial values
