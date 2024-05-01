@@ -1,6 +1,6 @@
 # InfluencerGPT v1
 🚀 Unveiling InfluencerGPT: Your AI-Powered Content Creation Companion! 
-This innovative app is designed to streamline the social media presence of businesses and individuals by transforming text, images, or URLs into engaging posts. 🤯
+This innovative app is designed to streamline the social media presence of small businesses and individuals by transforming text, images, or URLs into engaging posts. 🤯
 
 ## Features
 Here's what it offers:
@@ -20,6 +20,9 @@ Here's what it offers:
 
 - 🧠 **Powered by Gemini Pro:** Leverages advanced AI capabilities for top-notch content quality.
 <img src="res/inf-magic.png" width="612" height="300">
+
+- 🛡️ **Committed to Responsible AI:** We've implemented safety measures to prevent our AI from generating harmful content. This includes filtering for categories like harassment, hate speech, sexually explicit material, and dangerous suggestions.
+<img src="res/inf-responsible-ai.png" width="612" height="300">
 
 - 💻 **Responsive Design:** Enjoy a user-friendly experience across all devices. 
 
